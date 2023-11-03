@@ -14,7 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import GppMaybeIcon from '@mui/icons-material/GppMaybe';
 import {NavLink} from 'react-router-dom';
 
-const pages = [{name:'About Us', link: '/about'}, {name:'explore', link: '/explore'},{name:'map', link: '/about'}];
+const pages = [{name:'About Us', link: '/about'}, {name:'Explore', link: '/explore'},{name:'Map', link: '/about'}];
 const settings = ['Profile','Logout'];
 
 const Navbar = (props) => {
@@ -45,7 +45,6 @@ const Navbar = (props) => {
             variant="h6"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -89,9 +88,9 @@ const Navbar = (props) => {
               }}
             >
               {pages.map((page) => (
-              <NavLink key={page.name} to={page.link} >
+              <NavLink key={page.name} to={page.link}  style={{ textDecoration: 'none' }}>
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page.name}</Typography>
+                  <Typography sx={{color: "red"}}textAlign="center">{page.name}</Typography>
                 </MenuItem>
                 </NavLink>
               ))}
@@ -152,11 +151,14 @@ const Navbar = (props) => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                <NavLink to={"/profile"} style={{textDecoration:"none"}}>
+                <MenuItem onClick={handleCloseUserMenu} to={"/profile"}>
+                  <Typography sx={{color: "red"}} textAlign="center">Profile</Typography>
                 </MenuItem>
-              ))}
+                </NavLink>
+                <MenuItem onClick={handleCloseUserMenu}>
+                  <Typography sx={{color: "red"}} textAlign="center">Logout</Typography>
+                </MenuItem>
             </Menu>
           </Box>
         </Toolbar>
