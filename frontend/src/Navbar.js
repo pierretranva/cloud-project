@@ -14,7 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import GppMaybeIcon from '@mui/icons-material/GppMaybe';
 import {NavLink} from 'react-router-dom';
 
-const pages = [{name:'About Us', link: '/about'}, {name:'Explore', link: '/explore'},{name:'Map', link: '/about'}];
+const pages = [{name:'About Us', link: '/about'}, {name:'Explore', link: '/explore'},{name:'Map', link: '/map'}];
 const settings = ['Profile','Logout'];
 
 const Navbar = (props) => {
