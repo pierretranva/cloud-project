@@ -5,8 +5,9 @@ import Navbar from "./Navbar.js"
 import Explore from './Components/Explore';
 import UserProfile from './Components/Profile';
 import MapPage from './Components/MapPage';
-
 import About from './Components/About.js';
+
+
 const App = () => {
   const [ageRange, setAgeRange] = useState([20, 80]);
   const [selectedTags, setSelectedTags] = useState([]);
