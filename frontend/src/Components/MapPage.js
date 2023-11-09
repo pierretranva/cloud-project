@@ -45,7 +45,7 @@ const MapPage = () => {
 	const [urgency, setUrgency] = useState(["low", "medium", "high"]);
 	const [markers, setMarkers] = useState(tempMarkers);
 	const [currentJob, setCurrentJob] = useState(tempJob);
-    const [searchBox, setSearchBox] = useState("");
+	const [searchBox, setSearchBox] = useState("");
 
 	const urgencyValues = ["low", "medium", "high"];
 
@@ -59,20 +59,20 @@ const MapPage = () => {
 		);
 	}
 
-    function handleSearch(){
-        getGeocode()
-    }
+	function handleSearch() {
+		getGeocode();
+	}
 	function getGeocode() {
-		fetch("https://geocode.maps.co/search?q={"+ searchBox + "}")
+		fetch("https://geocode.maps.co/search?q={" + searchBox + "}")
 			.then((res) => res.json())
 			.then((json) => {
-                console.log(json)
-                    mapRef.current.fitBounds([
-                        [json[0].boundingbox[2],json[0].boundingbox[0]],
-                        [json[0].boundingbox[3],json[0].boundingbox[1]]
-                    ])
+                if(json.length != 0){
+				mapRef.current.fitBounds([
+					[json[0].boundingbox[2], json[0].boundingbox[0]],
+					[json[0].boundingbox[3], json[0].boundingbox[1]],
+				]);
+            }
 				// mapRef.current.flyTo({center:[json[0].lon,json[0].lat]})
-                
 			});
 	}
 
@@ -89,7 +89,7 @@ const MapPage = () => {
 				}}
 			>
 				<Paper elevation={4} sx={{ width: "60%", marginLeft: "10" }}>
-					<Box sx={{ position: "absolute", zIndex: 1, marginTop: 2, marginLeft: 2, display: 'flex', height: '3rem'}}>
+					<Box sx={{ position: "absolute", zIndex: 1, marginTop: 2, marginLeft: 2, display: "flex", height: "3rem" }}>
 						{/* <TextField
 							id="outlined-uncontrolled"
 							label="Search CrisLine.org"
@@ -109,15 +109,26 @@ const MapPage = () => {
 							<InputBase
 								sx={{ ml: 1, flex: 1 }}
 								placeholder="Search CrisLine Map"
-                                value={searchBox}
+								value={searchBox}
 								inputProps={{ "aria-label": "search CrisLine Map" }}
-                                onChange={(e)=>{setSearchBox(e.target.value)}}
-                                onKeyDown={(ev)=>{if (ev.key === 'Enter') {
-                                    handleSearch()
-                                    ev.preventDefault();
-                                  }}}
+								onChange={(e) => {
+									setSearchBox(e.target.value);
+								}}
+								onKeyDown={(ev) => {
+									if (ev.key === "Enter") {
+										handleSearch();
+										ev.preventDefault();
+									}
+								}}
 							/>
-							<IconButton onClick={() =>{handleSearch()}} type="button" sx={{ p: "10px" }} aria-label="search">
+							<IconButton
+								onClick={() => {
+									handleSearch();
+								}}
+								type="button"
+								sx={{ p: "10px" }}
+								aria-label="search"
+							>
 								<SearchIcon />
 							</IconButton>
 						</Paper>
@@ -125,7 +136,18 @@ const MapPage = () => {
 							multiple
 							value={urgency}
 							onChange={handleChange}
-							input={<InputBase sx={{ "& fieldset": { border: "none" }, marginLeft: '1rem', backgroundColor: 'white',p: "2px 4px", borderRadius: '4px', boxShadow:1 }} ></InputBase>}
+							input={
+								<InputBase
+									sx={{
+										"& fieldset": { border: "none" },
+										marginLeft: "1rem",
+										backgroundColor: "white",
+										p: "2px 4px",
+										borderRadius: "4px",
+										boxShadow: 1,
+									}}
+								></InputBase>
+							}
 							renderValue={(urgency) => {
 								return (
 									<Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
@@ -216,7 +238,11 @@ const MapPage = () => {
 							</Box>
 						</Box>
 						<Box sx={{ display: "flex", justifyContent: "center" }}>
-							<Button variant='contained' color='success' sx={{ marginTop: "0.5rem", marginBottom: "-1rem", color: "white" }}>
+							<Button
+								variant="contained"
+								color="success"
+								sx={{ marginTop: "0.5rem", marginBottom: "-1rem", color: "white" }}
+							>
 								<Typography>JOIN</Typography>
 							</Button>
 						</Box>

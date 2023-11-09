@@ -19,7 +19,7 @@ const App = () => {
         <Route path="/" element={<About />} />
         <Route path="about" element={<About />} />
         <Route path="explore" element={<Explore ageRange={ageRange} setAgeRange={setAgeRange} setSelectedTags={setSelectedTags} />} />
-        <Route path="map" element={<MapPage></MapPage>} />
+        <Route path="map" element={<MapPage/>} />
         <Route path="profile" element={<UserProfile ageRange={ageRange} selectedTags={selectedTags} />} /> 
       </Routes>
     </BrowserRouter>
