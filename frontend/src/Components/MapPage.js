@@ -11,7 +11,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import DirectionsIcon from "@mui/icons-material/Directions";
 
 const tempJob = {
-	image: "/firefighter.jpg",
+	image: "/powerPlant.jpeg",
 	title: "Power Plant Explosion",
 	location: "Richmond",
 	dangerLevel: "HIGH",
@@ -74,9 +74,6 @@ const MapPage = () => {
 				// mapRef.current.flyTo({center:[json[0].lon,json[0].lat]})
                 
 			});
-	}
-	function reverseGeocode() {
-		fetch();
 	}
 
 	return (
@@ -156,8 +153,8 @@ const MapPage = () => {
 							longitude: -80.421,
 							zoom: 6,
 						}}
-						mapStyle="mapbox://styles/pierretranva/clomgll9q006u01qndjaoa9w8" //monochrome
-						// mapStyle="mapbox://styles/pierretranva/clonwj13o00a101qq9abf5vye" //street
+						// mapStyle="mapbox://styles/pierretranva/clomgll9q006u01qndjaoa9w8" //monochrome
+						mapStyle="mapbox://styles/pierretranva/clonwj13o00a101qq9abf5vye" //street
 						// mapStyle="mapbox://styles/pierretranva/clonwkk3o009o01qo1nolcv7z" //outdoors
 					>
 						{/* <Popup longitude={-80.41339397242855} latitude={37.22727240884507}>
@@ -174,7 +171,7 @@ const MapPage = () => {
 									longitude={e.longitude}
 									anchor="bottom"
 								>
-									<img height="30" src="./pin.png" />
+									<img height="30" src="./pin1.png" />
 								</Marker>
 							);
 						})}
@@ -188,7 +185,6 @@ const MapPage = () => {
 						<Typography
 							variant="h4"
 							noWrap
-							component="a"
 							sx={{
 								fontFamily: "monospace",
 								fontWeight: 700,
@@ -220,7 +216,7 @@ const MapPage = () => {
 							</Box>
 						</Box>
 						<Box sx={{ display: "flex", justifyContent: "center" }}>
-							<Button sx={{ marginTop: "0.5rem", marginBottom: "-1rem", backgroundColor: "red", color: "white" }}>
+							<Button variant='contained' color='success' sx={{ marginTop: "0.5rem", marginBottom: "-1rem", color: "white" }}>
 								<Typography>JOIN</Typography>
 							</Button>
 						</Box>
