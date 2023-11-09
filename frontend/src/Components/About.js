@@ -1,6 +1,6 @@
 // About.js
 import React from "react";
-import "bootstrap/dist/css/bootstrap.min.css"; // Make sure to include the Bootstrap CSS file
+// import "bootstrap/dist/css/bootstrap.min.css"; // Make sure to include the Bootstrap CSS file
 import '../Stylings/About.css';
 
 const About = () => {
