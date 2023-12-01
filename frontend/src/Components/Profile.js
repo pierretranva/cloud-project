@@ -31,8 +31,8 @@ const UserProfile = ({}) => {
     };
 
     const userJobs = [
-        { title: "Firefighter", year: "2018 - 2022", description: "Worked at the Springfield Fire Department" },
-        { title: "Paramedic", year: "2015 - 2018", description: "Served as a paramedic in the Springfield region" },
+        { title: "Firefighter", year: "2018 - 2022", description: "Worked at the Springfield Fire Department", image: 'powerPlant.jpeg' },
+        { title: "Paramedic", year: "2015 - 2018", description: "Served as a paramedic in the Springfield region", image: 'firefighter.jpg' },
     ];
 
     const handleAddJob = () => {
