@@ -1,9 +1,11 @@
 // About.js
 import React from "react";
+import { Link } from 'react-router-dom';
+
 // import "bootstrap/dist/css/bootstrap.min.css"; // Make sure to include the Bootstrap CSS file
 import '../Stylings/About.css';
 
-const About = () => {
+const About = ({ authToken }) => {
   return (
     <div style={{ marginTop: "40px" }}>
       <div className="container">

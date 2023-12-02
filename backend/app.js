@@ -2,9 +2,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const expressJwt = require('express-jwt');
+const User = require('./models/user');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 // Set the web server
 const app = express();
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
@@ -35,6 +40,18 @@ router.route('/jobs').get( (req, res) => {
   );
 });
 
+const requireAuth = expressJwt({
+  secret: 'SECRET_KEY', 
+  algorithms: ['HS256'],
+  userProperty: 'auth'
+});
+
+// Example of a protected route
+app.get('/protected', requireAuth, (req, res) => {
+  res.send('This is a protected route');
+});
+
+
 // Added support for post requests. A document is found based on its id. The id is the value of _id property of the document.
 router.route('/update/:id').post( (req, res) => {
     // console.log(req.body)
@@ -51,7 +68,37 @@ router.route('/update/:id').post( (req, res) => {
   });
 })
 
+router.get('/profile/:id', async (req, res) => {
+    try {
+        const profile = await Profile.findById(req.params.id);
+        res.json(profile);
+    } catch (error) {
+        res.status(404).send("Profile not found");
+    }
+});
+
+router.post('/profile', async (req, res) => {
+    const newProfile = new Profile(req.body);
+    try {
+        await newProfile.save();
+        res.status(201).send(newProfile);
+    } catch (error) {
+        res.status(400).send("Error saving profile");
+    }
+});
+
+router.put('/profile/:id', async (req, res) => {
+    try {
+        const profile = await Profile.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.json(profile);
+    } catch (error) {
+        res.status(400).send("Error updating profile");
+    }
+});
+
 // Export the app to be used in bin/www.js
 // module.exports = app;
-const port = 3000
-app.listen(port, () => console.log(`Hello world app listening on port ${port}!`));
+const port = 3000;
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});

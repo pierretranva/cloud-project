@@ -1,26 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PastJobs from './PastJobs';
 import '../Stylings/Profile.css';
 
-const initialProfile = {
-    firstName: 'Jerry',
-    lastName: 'Wang',
-    location: 'Richmond, VA',
-    age: 25,
-    height: "5'1\"",
-    weight: '190 lbs',
-    bio: 'Ex-Marine, Volunteer Firefighter',
-    image: '/firefighter.jpg',
-    tags: ['Military', 'FireFighter'],
-    jobs: [
-        { title: "Firefighter", year: "2018 - 2022", description: "Worked at the Springfield Fire Department" },
-        { title: "Paramedic", year: "2015 - 2018", description: "Served as a paramedic in the Springfield region" },
-    ]
-};
+const UserProfile = () => {
+    const [profile, setProfile] = useState(null);
+    const [error, setError] = useState('');
 
-const UserProfile = ({}) => {
-    const [profile, setProfile] = useState(initialProfile);
+    useEffect(() => {
+        const fetchProfile = async () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                setError('No token found');
+                return;
+            }
 
+            try {
+                const response = await fetch('http://localhost:3000/db/profile', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!response.ok) throw new Error('Profile fetch failed');
+                const data = await response.json();
+                setProfile(data);
+            } catch (error) {
+                setError('Error fetching profile');
+            }
+        };
+
+        fetchProfile();
+    }, []);
 
     const handleProfileChange = (event) => {
         const { name, value } = event.target;
@@ -30,19 +37,44 @@ const UserProfile = ({}) => {
         }));
     };
 
-    const userJobs = [
-        { title: "Firefighter", year: "2018 - 2022", description: "Worked at the Springfield Fire Department", image: 'powerPlant.jpeg' },
-        { title: "Paramedic", year: "2015 - 2018", description: "Served as a paramedic in the Springfield region", image: 'firefighter.jpg' },
-    ];
-
-    const handleAddJob = () => {
-        // Logic to add a new job
-        console.log('Add new job logic here');
+    const handleAddJob = (newJob) => {
+        // Add logic to add a new job
+        setProfile(prevState => ({
+            ...prevState,
+            jobs: [...prevState.jobs, newJob]
+        }));
     };
 
-    const saveProfile = () => {
-        console.log('Profile saved', profile);
+    const saveProfile = async () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setError('No token found');
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:3000/db/profile/${profile._id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(profile)
+            });
+            const data = await response.json();
+            console.log('Profile updated', data);
+        } catch (error) {
+            console.error('Error updating profile', error);
+        }
     };
+
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
+
+    if (!profile) {
+        return <div>Loading profile...</div>;
+    }
 
     return (
         <div className="profile">
@@ -63,7 +95,7 @@ const UserProfile = ({}) => {
             </div>
 
             <div className="profile-jobs">
-                <PastJobs jobs={userJobs} onAddJob={handleAddJob} />
+                <PastJobs jobs={profile.jobs} onAddJob={handleAddJob} />
             </div>
 
             <button onClick={saveProfile}>Save Profile</button>
