@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.get('/', (req, res) =>
-    res.send('<h1>HW 6: Server</h1>') // Home web page
+    res.send('<h1>Cloud Project Backend</h1>') // Home web page
 );
 
 // Connect to MongoDB database
