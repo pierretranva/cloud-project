@@ -2,9 +2,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const expressJwt = require('express-jwt');
+const { expressjwt: jwt } = require("express-jwt");
 const User = require('./models/user');
-const jwt = require('jsonwebtoken');
+const jsonwebtoken = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
 // Set the web server
@@ -40,7 +40,7 @@ router.route('/jobs').get( (req, res) => {
   );
 });
 
-const requireAuth = expressJwt({
+const requireAuth = jwt({
   secret: 'SECRET_KEY', 
   algorithms: ['HS256'],
   userProperty: 'auth'
