@@ -17,6 +17,29 @@ app.get('/', (req, res) =>
     res.send('<h1>Cloud Project Backend</h1>') // Home web page
 );
 
+app.post('/login', async (req, res) => {
+  try {
+      const { email, password } = req.body;
+      const user = await User.findOne({ email });
+
+      if (!user) {
+          return res.status(401).send({ message: "Invalid email or password" });
+      }
+
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+
+      if (!isPasswordValid) {
+          return res.status(401).send({ message: "Invalid email or password" });
+      }
+
+      const token = jwt.sign({ userId: user._id }, 'SECRET_KEY', { expiresIn: '1h' }); // Replace 'SECRET_KEY' with your secret key
+
+      res.send({ token });
+  } catch (error) {
+      res.status(500).send({ message: "Internal server error" });
+  }
+});
+
 // Connect to MongoDB database
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb+srv://cloud:cloud@cluster0.fdxyg7y.mongodb.net/cloud?retryWrites=true&w=majority', {
