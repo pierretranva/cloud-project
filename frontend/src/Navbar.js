@@ -12,18 +12,16 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import GppMaybeIcon from '@mui/icons-material/GppMaybe';
-import {NavLink} from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
-const pages = [{name:'About Us', link: '/about'}, {name:'Explore', link: '/explore'},{name:'Map', link: '/map'}];
-const settings = ['Profile','Logout'];
-
-const Navbar = (props) => {
+const Navbar = ({ signedIn, handleSignIn }) => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
+
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -36,8 +34,16 @@ const Navbar = (props) => {
     setAnchorElUser(null);
   };
 
+  const handleLogout = () => {
+    handleSignIn(false);
+    handleCloseUserMenu();
+  };
+
+  const pages = [{ name: 'About Us', link: '/about' }, { name: 'Explore', link: '/explore' }, { name: 'Map', link: '/map' }];
+  const settings = signedIn ? ['Profile', 'Logout'] : ['Login', 'Register'];
+
   return (
-    <AppBar position="static" sx={{bgcolor: "red"}}>
+    <AppBar position="static" sx={{ bgcolor: "red" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <GppMaybeIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
@@ -88,20 +94,21 @@ const Navbar = (props) => {
               }}
             >
               {pages.map((page) => (
-              <NavLink key={page.name} to={page.link}  style={{ textDecoration: 'none' }}>
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography sx={{color: "red"}}textAlign="center">{page.name}</Typography>
-                </MenuItem>
+                <NavLink key={page.name} to={page.link} style={{ textDecoration: 'none' }}>
+                  <MenuItem onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center">{page.name}</Typography>
+                  </MenuItem>
                 </NavLink>
               ))}
             </Menu>
           </Box>
+
           <GppMaybeIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="#"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -115,16 +122,16 @@ const Navbar = (props) => {
           >
             CrisLine.org
           </Typography>
+
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-                <NavLink key={page.name} to={page.link} style={{ textDecoration: 'none' }}>
-              <Button
-                key={page.name}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                {page.name}
-              </Button>
+              <NavLink key={page.name} to={page.link} style={{ textDecoration: 'none' }}>
+                <Button
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  {page.name}
+                </Button>
               </NavLink>
             ))}
           </Box>
@@ -151,19 +158,19 @@ const Navbar = (props) => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-                <NavLink to={"/profile"} style={{textDecoration:"none"}}>
-                <MenuItem onClick={handleCloseUserMenu} to={"/profile"}>
-                  <Typography sx={{color: "red"}} textAlign="center">Profile</Typography>
-                </MenuItem>
+              {settings.map((setting) => (
+                <NavLink to={setting === 'Logout' ? '/' : `/${setting.toLowerCase()}`} style={{ textDecoration: 'none' }}>
+                  <MenuItem key={setting} onClick={setting === 'Logout' ? handleLogout : handleCloseUserMenu}>
+                    <Typography textAlign="center">{setting}</Typography>
+                  </MenuItem>
                 </NavLink>
-                <MenuItem onClick={handleCloseUserMenu}>
-                  <Typography sx={{color: "red"}} textAlign="center">Logout</Typography>
-                </MenuItem>
+              ))}
             </Menu>
           </Box>
         </Toolbar>
       </Container>
     </AppBar>
   );
-}
+};
+
 export default Navbar;
