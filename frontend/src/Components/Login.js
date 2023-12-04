@@ -1,45 +1,35 @@
 import React, { useState } from 'react';
-
-const Login = () => {
-    const [email, setEmail] = useState('');
+import axios from 'axios';
+const Login = (props) => {
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        try {
-            const response = await fetch('http://localhost:3000/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
-            if (response.ok) {
-                const data = await response.json();
-                localStorage.setItem('userToken', data.token);
-                alert('Logged in successfully');
-            } else {
-                const data = await response.json();
-                setError(data.message || 'Login failed');
+        axios.post('http://localhost:3000/db/user/login', {username:username, password: password}).then(
+            (res) =>{
+                console.log(res.data)
+                props.handleSignIn(res.data)
             }
-        } catch (err) {
-            setError('Server error');
-        }
+        ).catch((err)=>{
+            setError(err)
+        })
     };
 
     return (
         <div>
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label>Email:</label>
-                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <label>Username:</label>
+                    <input value={username} onChange={(e) => setUsername(e.target.value)} />
                 </div>
                 <div>
                     <label>Password:</label>
                     <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
                 </div>
                 <button type="submit">Login</button>
-                {error && <p>{error}</p>}
+                {error && <p style={{color: "red"}}>{error}</p>}
             </form>
         </div>
     );

@@ -9,6 +9,7 @@ import Divider from "@mui/material/Divider";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import DirectionsIcon from "@mui/icons-material/Directions";
+import sha256 from 'crypto-js/sha256'
 
 const tempJob = {
 	image: "/powerPlant.jpeg",

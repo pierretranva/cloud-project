@@ -2,6 +2,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const bcrypt = require ('bcrypt');
 
 // Set the web server
 const app = express();
@@ -22,6 +23,7 @@ mongoose.connection.once("open", function() {
   console.log("Connection with MongoDB was successful");
 });
 
+
 // Create routes for database access
 const jobSchema = require("./models/job");
 const router = express.Router();
@@ -38,9 +40,91 @@ router.route('/jobs').get( (req, res) => {
 // Added support for post requests. A document is found based on its id. The id is the value of _id property of the document.
 router.route('/update/:id').post( (req, res) => {
     // console.log(req.body)
+
   jobSchema.findById(req.params.id).then(function(items) {
     //add logic here later
     // items.title = req.body.newTitle
+    items.save().then(items => {
+      res.json('Items updated!');
+    })
+        .catch(err => {
+          res.status(400).send("Update not possible");
+        });
+  
+  });
+})
+
+const profileSchema = require("./models/profile")
+const userSchema = require("./models/user");
+
+function newProfile(username, password){
+    profileSchema.create({}).then((item) =>{
+        return {username: username, password: password, profile: item._id}
+    })
+}
+
+router.route('/user/register').post( (req, res) => {
+    // console.log(req.body)
+
+    let options = {upsert: true, new: true, setDefaultsOnInsert: true};
+
+    // userSchema.findOneAndUpdate({username: req.body.username},newProfile(req.body.username, bcrypt.hash(req.body.password, 10)), options).then(
+    //     (items) =>{
+    //         console.log(items)
+    //         res.send(items)
+    //     }
+    // )
+    userSchema.find({username: req.body.username}).then((item) => {
+        if(item.length !=0){
+
+            res.status(401).json("Username already used")
+            console.log("trying to duplicate thing")
+            res.end()
+            return;
+        }
+        else{
+            bcrypt.hash(req.body.password, 10, function(err, hash) {
+                profileSchema.create({}).then((item) =>{
+                    userSchema.create({username: req.body.username, password: hash, profile: item._id}).then(
+                        (item) =>{res.json(item)}
+                    )
+                });
+              });
+        }
+    })
+    
+   
+  });
+
+router.route('/user/login').post( (req, res) => {
+    
+    userSchema.findOne({username: req.body.username}).then(
+        (items) => 
+        {
+            if(items){
+                bcrypt.compare(req.body.password, items.password, function(err, result) {
+
+                    if (result) {
+                        res.json(items)
+                    }
+                    else {
+                        res.status(401).send("invalid password");
+                    }
+                  });
+            }
+            else{
+                res.status(401).send("invalid username");
+            }
+        }
+    )
+  });
+
+  router.route('/profile/update/:id').post( (req, res) => {
+    // console.log(req.body)
+  profileSchema.findById(req.params.id).then(function(items) {
+    //add logic here later
+    // items.title = req.body.newTitle
+
     items.save().then(items => {
       res.json('Items updated!');
     })

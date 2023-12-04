@@ -14,7 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import GppMaybeIcon from '@mui/icons-material/GppMaybe';
 import { NavLink } from 'react-router-dom';
 
-const Navbar = ({ signedIn, handleSignIn }) => {
+const Navbar = ({ signedIn, handleSignIn, handleLogout }) => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -34,8 +34,8 @@ const Navbar = ({ signedIn, handleSignIn }) => {
     setAnchorElUser(null);
   };
 
-  const handleLogout = () => {
-    handleSignIn(false);
+  const handleLogout1 = () => {
+    handleLogout(false);
     handleCloseUserMenu();
   };
 
@@ -158,9 +158,9 @@ const Navbar = ({ signedIn, handleSignIn }) => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <NavLink to={setting === 'Logout' ? '/' : `/${setting.toLowerCase()}`} style={{ textDecoration: 'none' }}>
-                  <MenuItem key={setting} onClick={setting === 'Logout' ? handleLogout : handleCloseUserMenu}>
+              {settings.map((setting, i) => (
+                <NavLink key={i} to={setting === 'Logout' ? '/' : `/${setting.toLowerCase()}`} style={{ textDecoration: 'none' }}>
+                  <MenuItem key={setting} onClick={setting === 'Logout' ? handleLogout1 : handleCloseUserMenu}>
                     <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
                 </NavLink>

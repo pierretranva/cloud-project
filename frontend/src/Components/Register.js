@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-const Register = () => {
-    const [email, setEmail] = useState('');
+const Register = (props) => {
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
 
     const hardcodedCredentials = {
         email: 'user@example.com',
@@ -12,27 +14,35 @@ const Register = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        if (email === hardcodedCredentials.email && password === hardcodedCredentials.password) {
-            alert('Logged in successfully');
-        } else {
-            setError('Invalid credentials');
-        }
+        axios.post('http://localhost:3000/db/user/register/', {username: username, password: password}).then(
+            (res) =>{
+                console.log(res)
+                setSuccess("Successfully Created New Account")
+            }
+        ).catch((err) =>{
+            setError(err.response.data)})
+        
     };
+    useEffect(() =>{
+        setError('')
+        setSuccess('')
+    }, [username, password])
+
 
     return (
         <div>
-            <form onSubmit={handleSubmit}>
+            <form >
                 <div>
-                    <label>Email:</label>
-                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <label>Username:</label>
+                    <input  value={username} onChange={(e) => setUsername(e.target.value)} />
                 </div>
                 <div>
                     <label>Password:</label>
-                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                    <input type="password"  value={password} onChange={(e) => setPassword(e.target.value)} />
                 </div>
-                <button type="submit">Login</button>
-                {error && <p>{error}</p>}
+                <button onClick={(e)=> {handleSubmit(e)}}>Create Account</button>
+               {error && <p style={{color: "red"}}>{error}</p>}
+               {success && <p style={{color: "green"}}>{success}</p>}
             </form>
         </div>
     );
