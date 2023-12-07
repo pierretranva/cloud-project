@@ -135,6 +135,21 @@ router.route('/user/login').post( (req, res) => {
   });
 })
 
+
+router.route('/profile/update/:id').put((req, res) => {
+  const profileId = req.params.id;
+  const updateData = req.body;
+
+  profileSchema.findByIdAndUpdate(profileId, updateData, { new: true })
+    .then(updatedProfile => {
+      res.json(updatedProfile);
+    })
+    .catch(err => {
+      res.status(400).send("Update not possible");
+    });
+});
+
+
 // Export the app to be used in bin/www.js
 // module.exports = app;
 const port = 3000

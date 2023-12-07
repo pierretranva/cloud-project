@@ -26,6 +26,12 @@ const App = () => {
     setSignedIn(false)
   }
 
+  const handleRegisterSuccess = (user) => {
+    setUser(user);
+    setSignedIn(true);
+    navigate("/profile");
+  };
+
 
   return (
     <>
@@ -37,7 +43,7 @@ const App = () => {
         <Route path="map" element={<MapPage />} />
         <Route path="profile" element={signedIn ? <UserProfile ageRange={ageRange} selectedTags={selectedTags} /> : <Navigate to="/" />} />
         <Route path="login" element={<Login handleSignIn={handleSignIn} />} />
-        <Route path="register" element={<Register />} />
+        <Route path="register" element={<Register onRegisterSuccess={handleRegisterSuccess} />} />
       </Routes>
   </>
   );
