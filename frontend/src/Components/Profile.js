@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PastJobs from './PastJobs';
 import '../Stylings/Profile.css';
+import axios from 'axios';
 
 const initialProfile = {
     firstName: 'Jerry',
@@ -18,7 +19,7 @@ const initialProfile = {
     ]
 };
 
-const UserProfile = ({}) => {
+const UserProfile = ({ profileId }) => {
     const [profile, setProfile] = useState(initialProfile);
 
 
@@ -41,8 +42,14 @@ const UserProfile = ({}) => {
     };
 
     const saveProfile = () => {
-        console.log('Profile saved', profile);
-    };
+        const url = `http://localhost:3000/api/profile/update/${profileId}`;
+        axios.put(url, profile)
+            .then(response => {
+                console.log('Profile updated', response.data);
+            })
+            .catch(error => {
+                console.error('Error updating profile', error);
+            });    };
 
     return (
         <div className="profile">
