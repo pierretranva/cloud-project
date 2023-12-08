@@ -37,22 +37,35 @@ router.route('/jobs').get( (req, res) => {
   );
 });
 
-// Added support for post requests. A document is found based on its id. The id is the value of _id property of the document.
-router.route('/update/:id').post( (req, res) => {
-    // console.log(req.body)
+router.route('/jobs/update/:id').post((req, res) => {
+    jobSchema.findById(req.params.id).then((item) =>{
 
-  jobSchema.findById(req.params.id).then(function(items) {
-    //add logic here later
-    // items.title = req.body.newTitle
-    items.save().then(items => {
-      res.json('Items updated!');
+        //need to add in the code here later to update the entry
+        
+        item.save().then(item =>{
+            res.json
+        })
+        .catch(err =>{
+            res.status(400).send("Update not possible")
+        })
+
     })
-        .catch(err => {
-          res.status(400).send("Update not possible");
-        });
-  
-  });
 })
+
+router.route('/jobs/create').post((req, res) => {
+    console.log(req.body)
+    jobSchema.create(req.body).then(
+        (item) =>{
+            jobSchema.find().then(function(items) {
+                // console.log(items);
+                //find all items are returns
+              res.json(items);
+            })
+        }
+    )
+
+})
+
 
 const profileSchema = require("./models/profile")
 const userSchema = require("./models/user");
