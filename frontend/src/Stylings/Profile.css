@@ -1,8 +1,10 @@
 .profile {
+    height: 90vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     font-family: Arial, sans-serif;
+    max-width: 40vh;
 }
 
 .profile-image img {
@@ -15,9 +17,11 @@
 
 .profile-info {
     text-align: center;
+    display: flex;
+    flex-direction: column;
 }
 
-.profile-info h2 {
+.profile-info h2 input{
     margin: 10px 0;
     color: #333;
 }
@@ -43,10 +47,12 @@
 }
 
 .profile-jobs {
+    z-index: -1;
+    position: absolute;
     width: 100%;
     padding: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+    /* margin-bottom: 20px; */
 }
 
 button {

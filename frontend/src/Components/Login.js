@@ -13,7 +13,8 @@ const Login = (props) => {
                 props.handleSignIn(res.data)
             }
         ).catch((err)=>{
-            setError(err)
+            // console.log(err.response.data)
+            setError(err.response.data)
         })
     };
 

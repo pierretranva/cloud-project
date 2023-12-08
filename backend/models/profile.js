@@ -6,7 +6,7 @@ const profileSchema = new mongoose.Schema({
     location: String,
     age: Number,
     height: String,
-    weight: String,
+    weight: Number,
     bio: String,
     image: String,
     tags: [String],
@@ -19,6 +19,6 @@ const profileSchema = new mongoose.Schema({
             }
         }
     }
-});
+}, {versionKey: false});
 
 module.exports = mongoose.model('profiles', profileSchema);

@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
     password: String,
     profile: mongoose.Schema.ObjectId
 
-});
+}, {versionKey: false});
 
 // Export schema
 module.exports = mongoose.model('users', userSchema);

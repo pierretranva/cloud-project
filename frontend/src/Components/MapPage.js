@@ -57,7 +57,7 @@ const jobTemplate = {
 	coordinates: { latitude: 0, longitude: 0 },
 };
 
-const MapPage = () => {
+const MapPage = ( props) => {
 	const mapRef = useRef(null);
 	const [urgency, setUrgency] = useState(["low", "medium", "high"]);
 	const [allJobs, setAllJobs] = useState([]);
@@ -74,6 +74,7 @@ const MapPage = () => {
                 console.log(res.data)
                 setAllJobs(res.data)
             })
+            console.log(props.user)
 
     },[])
 	function handleChange(e) {
@@ -166,7 +167,7 @@ const MapPage = () => {
 						><IconButton type="button" sx={{ p: '10px' }} aria-label="search">
                         <SearchIcon />
                       </IconButton></TextField> */}
-						<Tooltip title="Add New Job">
+						{props.user && <Tooltip title="Add New Job">
 							<Fab
 								size="medium"
 								aria-label="add"
@@ -178,7 +179,7 @@ const MapPage = () => {
 							>
 								<AddIcon />
 							</Fab>
-						</Tooltip>
+						</Tooltip>}
 						<Paper component="form" sx={{ p: "2px 4px", display: "flex", alignItems: "center" }}>
 							<InputBase
 								sx={{ ml: 1, flex: 1 }}
@@ -393,7 +394,7 @@ const MapPage = () => {
 							</Box>
 						</Box>
 					)}
-					{addJobMode && (
+					{props.user && addJobMode && (
 						<Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", overflow: "auto" }}>
 							<img style={{ borderRadius: "1rem", margin: "1rem" }} src={newJob.image} height={200}></img>
 							<Box sx={{ display: "flex", p: 2, m: 2 }}>
