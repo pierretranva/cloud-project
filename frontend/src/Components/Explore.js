@@ -2,10 +2,18 @@ import React, { useState, useEffect } from 'react';
 import Slider from '@mui/material/Slider';
 import axios from 'axios';
 import "../Stylings/Profile.css";
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormGroup from '@mui/material/FormGroup';
 
 const Explore = () => {
     const [ageRange, setAgeRange] = useState([18, 80]);
-    const [tags, setTags] = useState([]);
+    const [tags, setTags] = useState({
+        Medical: false,
+        FireFighter: false,
+        Police: false,
+        Military: false,
+    });
     const [profiles, setProfiles] = useState([]);
 
     useEffect(() => {
@@ -22,15 +30,21 @@ const Explore = () => {
         setAgeRange(newValue);
     };
 
-    const handleTagChange = (event) => {
-        const newTags = event.target.value.split(',').map(tag => tag.trim());
-        setTags(newTags);
+    const handleTagChange = (tagName) => {
+        setTags((prevTags) => ({
+            ...prevTags,
+            [tagName]: !prevTags[tagName],
+        }));
     };
 
     const filterProfiles = () => {
-        return profiles.filter(profile =>
-            profile.age >= ageRange[0] && profile.age <= ageRange[1] &&
-            tags.every(tag => profile.tags.includes(tag))
+        return profiles.filter(
+            (profile) =>
+                profile.age >= ageRange[0] &&
+                profile.age <= ageRange[1] &&
+                Object.entries(tags).every(([tag, isSelected]) =>
+                    isSelected ? profile.tags.includes(tag) : true
+                )
         );
     };
 
@@ -85,15 +99,24 @@ const Explore = () => {
             <div style={{ display: 'flex', flexDirection: 'row', borderRight: '1px solid gray' }}>
                 <div style={{ flex: '30%', padding: '1em', borderRight: '1px solid gray' }}>
                     <h2>Preferences</h2>
-                    <label>
-                        Tags: 
-                        <input 
-                            type="text" 
-                            placeholder="e.g., Military, FireFighter" 
-                            onChange={handleTagChange} 
-                        />
-                    </label>
-                    <h3>Age: {ageRange[0]} - {ageRange[1]}</h3>
+                    <h4>Tags:</h4>
+                    <FormGroup>
+                        {Object.entries(tags).map(([tag, isSelected]) => (
+                            <FormControlLabel
+                                key={tag}
+                                control={
+                                    <Checkbox
+                                        checked={isSelected}
+                                        onChange={() => handleTagChange(tag)}
+                                        color="primary" // Customize the color as needed
+                                    />
+                                }
+                                label={tag}
+                                style={{ margin: '0px', display: 'block' }}
+                            />
+                        ))}
+                    </FormGroup>
+                    <h4>Age: {ageRange[0]} - {ageRange[1]}</h4>
                     <Slider
                         value={ageRange}
                         onChange={handleSliderChange}
@@ -102,7 +125,7 @@ const Explore = () => {
                         valueLabelDisplay="auto"
                     />
                 </div>
-    
+
                 <div style={{ flex: '70%', padding: '1em', overflowY: 'auto', maxHeight: '400px' }}>
                     {filterProfiles().map((profile, index) => (
                         <UserProfile key={index} profile={profile} />
