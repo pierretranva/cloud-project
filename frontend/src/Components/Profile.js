@@ -18,7 +18,7 @@ const initialProfile = {
     ]
 };
 
-const UserProfile = ({}) => {
+const UserProfile = ({showAddJobButton}) => {
     const [profile, setProfile] = useState(initialProfile);
 
 
@@ -44,6 +44,7 @@ const UserProfile = ({}) => {
         console.log('Profile saved', profile);
     };
 
+
     return (
         <div className="profile">
             <div className="profile-image">
@@ -63,10 +64,11 @@ const UserProfile = ({}) => {
             </div>
 
             <div className="profile-jobs">
-                <PastJobs jobs={userJobs} onAddJob={handleAddJob} />
+                <PastJobs jobs={userJobs} onAddJob={handleAddJob} showAddJobButton={showAddJobButton != null ? false : true} />
             </div>
-
-            <button onClick={saveProfile}>Save Profile</button>
+            
+            {showAddJobButton != null ? null : <button onClick={saveProfile}>Save Profile</button>}
+           
         </div>
     );
 };

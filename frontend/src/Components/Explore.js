@@ -62,7 +62,7 @@ const Explore = () => {
     
                     <div style={{ flex: '70%', padding: '1em', overflowY: 'auto', maxHeight: '400px' }}>
                         {filteredProfiles.map((profile, index) => (
-                            <UserProfile key={index} profile={profile} />
+                            <UserProfile key={index} profile={profile} showAddJobButton={true}/>
                         ))}
                     </div>
                     
