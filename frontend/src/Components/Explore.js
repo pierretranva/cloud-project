@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Slider from '@mui/material/Slider';
 import axios from 'axios';
+import "../Stylings/Profile.css";
 
 const Explore = () => {
     const [ageRange, setAgeRange] = useState([18, 80]);
@@ -52,10 +53,29 @@ const Explore = () => {
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
                 </div>
-                <h2 style={{ margin: '5px' }}>{profile.firstName} {profile.lastName}</h2>
-                <p style={{ margin: '5px' }}>Age: {profile.age}</p>
-                <p style={{ margin: '5px' }}>Height: {profile.height}</p>
-                <p style={{ margin: '5px' }}>Weight: {profile.weight}</p>
+                <h2>{profile.firstName} {profile.lastName}</h2>
+                <p style={{ margin: '5px' }}>
+                    <strong>Location:</strong> {profile.location}
+                </p>
+                <p style={{ margin: '5px' }}>
+                    <strong>Age:</strong> {profile.age}
+                </p>
+                <p style={{ margin: '5px' }}>
+                    <strong>Height:</strong> {profile.height}
+                </p>
+                <p style={{ margin: '5px' }}>
+                    <strong>Weight:</strong> {profile.weight}
+                </p>
+                <div style={{ marginTop: '10px' }}>
+                {profile.tags.map((tag, index) => (
+                    <span
+                        key={index}
+                        className="profile-tag"
+                    >
+                        {tag}
+                    </span>
+                ))}
+            </div>
             </div>
         );
     };
