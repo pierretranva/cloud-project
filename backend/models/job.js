@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 
 // Create schema
 const jobSchema = new mongoose.Schema({
+    image: String,
     title: String,
     location: String,
     dangerLevel: String,
@@ -20,8 +21,9 @@ const jobSchema = new mongoose.Schema({
         }
     },
     date: String,
-    contact: String
-});
+    contact: String,
+    coordinates: {latitude: Number, longitude: Number}
+}, {versionKey: false });
 
 // Export schema
-module.exports = mongoose.model('cloud', jobSchema, 'jobs');
+module.exports = mongoose.model('jobs', jobSchema);
