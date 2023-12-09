@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import PastJobs from "./PastJobs";
 import "../Stylings/Profile.css";
 import axios from "axios";
-import { TextField, Box } from "@mui/material";
+import { TextField, Box, Select, InputBase, Chip, MenuItem } from "@mui/material";
 
 const initialProfile = {
 	firstName: "Jerry",
@@ -23,6 +23,8 @@ const initialProfile = {
 const UserProfile = (props) => {
 	const [profile, setProfile] = useState(initialProfile);
 	const [editMode, setEditMode] = useState(false);
+
+	const tagValues = ["Medical", "FireFighter", "Police", "Military"];
 
 	useEffect(() => {
 		console.log(props);
@@ -64,134 +66,165 @@ const UserProfile = (props) => {
 	};
 
 	return (
-        <Box sx={{display: "flex", justifyContent: "center"}}>
-		<div className="profile">
-			<div className="profile-image">
-				<img src={profile.image} alt={`${profile.firstName} ${profile.lastName}`} />
-			</div>
-			<div className="profile-info">
-				{editMode ? (
-					<Box>
+		<Box sx={{ display: "flex", justifyContent: "center" }}>
+			<div className="profile">
+				<div className="profile-image">
+					<img src={profile.image} alt={`${profile.firstName} ${profile.lastName}`} />
+				</div>
+				<div className="profile-info">
+					{editMode ? (
+						<Box>
+							<TextField
+								sx={{ m: 1 }}
+								label="First Name"
+								value={profile.firstName}
+								onChange={(e) => {
+									let temp = { ...profile };
+									temp.firstName = e.target.value;
+									setProfile(temp);
+								}}
+							></TextField>
+							<TextField
+								sx={{ m: 1 }}
+								label="Last Name"
+								value={profile.lastName}
+								onChange={(e) => {
+									let temp = { ...profile };
+									temp.lastName = e.target.value;
+									setProfile(temp);
+								}}
+							></TextField>
+						</Box>
+					) : (
+						<h2>{`${profile.firstName} ${profile.lastName}`}</h2>
+					)}
+					{editMode ? (
 						<TextField
 							sx={{ m: 1 }}
-							label="First Name"
-							value={profile.firstName}
+							label="Location"
+							value={profile.location}
 							onChange={(e) => {
 								let temp = { ...profile };
-								temp.firstName = e.target.value;
+								temp.location = e.target.value;
 								setProfile(temp);
 							}}
 						></TextField>
+					) : (
+						<p>{profile.location}</p>
+					)}
+					{editMode ? (
 						<TextField
 							sx={{ m: 1 }}
-							label="Last Name"
-							value={profile.lastName}
+							label="Age"
+							value={profile.age}
 							onChange={(e) => {
 								let temp = { ...profile };
-								temp.lastName = e.target.value;
+								temp.age = e.target.value;
 								setProfile(temp);
 							}}
 						></TextField>
-					</Box>
-				) : (
-					<h2>{`${profile.firstName} ${profile.lastName}`}</h2>
-				)}
-				{editMode ? (
-					<TextField
-						sx={{ m: 1 }}
-						label="Location"
-						value={profile.location}
-						onChange={(e) => {
-							let temp = { ...profile };
-							temp.location = e.target.value;
-							setProfile(temp);
-						}}
-					></TextField>
-				) : (
-					<p>{profile.location}</p>
-				)}
-				{editMode ? (
-					<TextField
-						sx={{ m: 1 }}
-						label="Age"
-						value={profile.age}
-						onChange={(e) => {
-							let temp = { ...profile };
-							temp.age = e.target.value;
-							setProfile(temp);
-						}}
-					></TextField>
-				) : (
-					<p>{`${profile.age} Years Old`}</p>
-				)}
-				{editMode ? (
-					<Box>
-						<TextField
-							sx={{ m: 1 }}
-							label="Height"
-							value={profile.height}
-							onChange={(e) => {
-								let temp = { ...profile };
-								temp.height = e.target.value;
-								setProfile(temp);
-							}}
-						></TextField>
+					) : (
+						<p>{`${profile.age} Years Old`}</p>
+					)}
+					{editMode ? (
+						<Box>
+							<TextField
+								sx={{ m: 1 }}
+								label="Height"
+								value={profile.height}
+								onChange={(e) => {
+									let temp = { ...profile };
+									temp.height = e.target.value;
+									setProfile(temp);
+								}}
+							></TextField>
 
+							<TextField
+								sx={{ m: 1 }}
+								label="Weight"
+								value={profile.weight}
+								onChange={(e) => {
+									let temp = { ...profile };
+									temp.weight = e.target.value;
+									setProfile(temp);
+								}}
+							></TextField>
+						</Box>
+					) : (
+						<p>{`${profile.height}, ${profile.weight}`}</p>
+					)}
+					{editMode ? (
 						<TextField
+							multiline
+							value={profile.bio}
+							label="bio"
 							sx={{ m: 1 }}
-							label="Weight"
-							value={profile.weight}
 							onChange={(e) => {
 								let temp = { ...profile };
-								temp.weight = e.target.value;
+								temp.bio = e.target.value;
 								setProfile(temp);
 							}}
 						></TextField>
-					</Box>
-				) : (
-					<p>{`${profile.height}, ${profile.weight}`}</p>
-				)}
-				{editMode ? (
-					<TextField
-						multiline
-						value={profile.bio}
-						label="bio"
-						sx={{ m: 1 }}
-						onChange={(e) => {
-							let temp = { ...profile };
-							temp.bio = e.target.value;
-							setProfile(temp);
-						}}
-					></TextField>
-				) : (
-					<p>{profile.bio}</p>
-				)}
-			</div>
-			<div className="profile-tags">
-				{profile.tags.map((tag, index) => (
-					<span key={index} className="profile-tag">
-						{tag}
-					</span>
-				))}
-			</div>
-
-			<div className="profile-jobs">
-				<PastJobs jobs={profile.jobs} onAddJob={handleAddJob} />
-			</div>
-			{editMode ? (
-				<button onClick={() => setEditMode(!editMode)}>Save Profile</button>
-			) : (
-				<button
-					onClick={() => {
-						saveProfile();
-						setEditMode(!editMode);
-					}}
+					) : (
+						<p>{profile.bio}</p>
+					)}
+				</div>
+				{!editMode ? <div className="profile-tags">
+					{profile.tags.map((tag, index) => (
+						<span key={index} className="profile-tag">
+							{tag}
+						</span>
+					))}
+				</div>
+				:<Select
+                label="Tags"
+					multiple
+					value={profile.tags}
+					onChange={(e) =>{const {
+                        target: { value },
+                    } = e;
+                    let temp = {...profile}
+                    temp.tags = (typeof value === "string" ? value.split(",") : value);
+                    setProfile(temp)}}
+					input={
+						<InputBase
+							sx={{
+								"& fieldset": { border: "none" },
+								marginLeft: "1rem",
+								backgroundColor: "white",
+								p: "2px 4px",
+								borderRadius: "4px",
+								boxShadow: 1,
+							}}
+						></InputBase>
+					}
+					
 				>
-					Edit Profile
-				</button>
-			)}
-		</div>
-        </Box>
+					{tagValues.map((val) => (
+						<MenuItem key={val} value={val}>
+							{val}
+						</MenuItem>
+					))}
+				</Select>
+}
+
+				<div className="profile-jobs">
+					<PastJobs jobs={profile.jobs} onAddJob={handleAddJob} />
+				</div>
+				{editMode ? (
+					<button onClick={() => {saveProfile(); setEditMode(!editMode);}}>Save Profile</button>
+				) : (
+					<button
+						onClick={() => {
+							
+							setEditMode(!editMode);
+						}}
+					>
+						Edit Profile
+					</button>
+				)}
+			</div>
+		</Box>
 	);
 };
 

@@ -158,9 +158,11 @@ router.route("/profile/update/:id").post((req, res) => {
         item.height = req.body.height;
         item.weight = req.body.weight;
         item.bio = req.body.bio;
+        item.tags = req.body.tags;
 
 		item.save()
 			.then((items) => {
+                console.log("Items Updated")
 				res.json("Items updated!");
 			})
 			.catch((err) => {
