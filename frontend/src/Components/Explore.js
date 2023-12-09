@@ -1,75 +1,108 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Slider from '@mui/material/Slider';
-import UserProfile from './Profile';
-
-const profiles = [
-    {
-        firstName: 'Jerry',
-        lastName: 'Wang',
-        age: 25,
-        tags: ['Military', 'FireFighter'],
-    },
-];
+import axios from 'axios';
 
 const Explore = () => {
     const [ageRange, setAgeRange] = useState([18, 80]);
     const [tags, setTags] = useState([]);
-    const [filteredProfiles, setFilteredProfiles] = useState([profiles]); // initially all profiles
+    const [profiles, setProfiles] = useState([]);
+
+    useEffect(() => {
+        axios.get("http://localhost:3000/db/profiles")
+            .then((res) => {
+                setProfiles(res.data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, []);
 
     const handleSliderChange = (event, newValue) => {
         setAgeRange(newValue);
-        filterProfiles();
     };
 
     const handleTagChange = (event) => {
         const newTags = event.target.value.split(',').map(tag => tag.trim());
         setTags(newTags);
-        filterProfiles();
     };
 
+    const handleLocationChange = (event) => {
+
+    }
+
     const filterProfiles = () => {
-        setFilteredProfiles(
-            profiles.filter(profile => 
-                profile.age >= ageRange[0] && profile.age <= ageRange[1] &&
-                tags.every(tag => profile.tags.includes(tag))
-            )
+        return profiles.filter(profile =>
+            profile.age >= ageRange[0] && profile.age <= ageRange[1] &&
+            tags.every(tag => profile.tags.includes(tag))
         );
     };
 
+    const UserProfile = ({ profile }) => {
         return (
-            <div style={{ border: '1px solid black', padding: '1em', borderRadius: '5px', width: '80%', margin: '1em auto' }}>
-                <div style={{ display: 'flex', flexDirection: 'row', borderRight: '1px solid gray' }}>
-                    
-                    <div style={{ flex: '30%', padding: '1em', borderRight: '1px solid gray' }}>
-                        <h2>Preferences</h2>
-                        <label>
-                            Tags: 
-                            <input 
-                                type="text" 
-                                placeholder="e.g., Military, FireFighter" 
-                                onChange={handleTagChange} 
-                            />
-                        </label>
-                        <h3>Age: {ageRange[0]} - {ageRange[1]}</h3>
-                        <Slider
-                            value={ageRange}
-                            onChange={handleSliderChange}
-                            min={0}
-                            max={100}
-                            valueLabelDisplay="auto"
-                        />
-                    </div>
-    
-                    <div style={{ flex: '70%', padding: '1em', overflowY: 'auto', maxHeight: '400px' }}>
-                        {filteredProfiles.map((profile, index) => (
-                            <UserProfile key={index} profile={profile} showAddJobButton={true}/>
-                        ))}
-                    </div>
-                    
+            <div style={{ marginBottom: '20px', borderBottom: '1px solid gray', paddingBottom: '20px', textAlign: 'center' }}>
+                <div
+                    style={{
+                        width: '100px',
+                        height: '100px',
+                        borderRadius: '50%',
+                        overflow: 'hidden',
+                        display: 'inline-block',
+                        marginBottom: '10px',
+                    }}
+                >
+                    <img
+                        src={profile.image}
+                        alt="Profile"
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
                 </div>
+                <h2 style={{ margin: '5px' }}>{profile.firstName} {profile.lastName}</h2>
+                <p style={{ margin: '5px' }}>Age: {profile.age}</p>
+                <p style={{ margin: '5px' }}>Height: {profile.height}</p>
+                <p style={{ margin: '5px' }}>Weight: {profile.weight}</p>
             </div>
         );
     };
+
+    return (
+        <div style={{ border: '1px solid black', padding: '1em', borderRadius: '5px', width: '80%', margin: '1em auto' }}>
+            <div style={{ display: 'flex', flexDirection: 'row', borderRight: '1px solid gray' }}>
+                <div style={{ flex: '30%', padding: '1em', borderRight: '1px solid gray' }}>
+                    <h2>Preferences</h2>
+                    <label>
+                        Tags: 
+                        <input 
+                            type="text" 
+                            placeholder="e.g., Military, FireFighter" 
+                            onChange={handleTagChange} 
+                        />
+                    </label>
+                    <label>
+                        Location: 
+                        <input 
+                            type="text" 
+                            placeholder="e.g., Blacksburg, Richmond" 
+                            onChange={handleLocationChange} 
+                        />
+                    </label>
+                    <h3>Age: {ageRange[0]} - {ageRange[1]}</h3>
+                    <Slider
+                        value={ageRange}
+                        onChange={handleSliderChange}
+                        min={0}
+                        max={100}
+                        valueLabelDisplay="auto"
+                    />
+                </div>
     
-    export default Explore;
-    
+                <div style={{ flex: '70%', padding: '1em', overflowY: 'auto', maxHeight: '400px' }}>
+                    {filterProfiles().map((profile, index) => (
+                        <UserProfile key={index} profile={profile} />
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Explore;

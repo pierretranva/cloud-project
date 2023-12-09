@@ -183,6 +183,14 @@ router.route("/profile/update/:id").put((req, res) => {
 		});
 });
 
+router.route("/profiles").get((req, res) => {
+    profileSchema.find().then(function (profiles) {
+        res.json(profiles);
+    }).catch(function (error) {
+        res.status(400).send("Could not retrieve profiles");
+    });
+});
+
 // Export the app to be used in bin/www.js
 // module.exports = app;
 const port = 3000;
