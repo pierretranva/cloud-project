@@ -26,10 +26,6 @@ const Explore = () => {
         setTags(newTags);
     };
 
-    const handleLocationChange = (event) => {
-
-    }
-
     const filterProfiles = () => {
         return profiles.filter(profile =>
             profile.age >= ageRange[0] && profile.age <= ageRange[1] &&
@@ -75,14 +71,6 @@ const Explore = () => {
                             type="text" 
                             placeholder="e.g., Military, FireFighter" 
                             onChange={handleTagChange} 
-                        />
-                    </label>
-                    <label>
-                        Location: 
-                        <input 
-                            type="text" 
-                            placeholder="e.g., Blacksburg, Richmond" 
-                            onChange={handleLocationChange} 
                         />
                     </label>
                     <h3>Age: {ageRange[0]} - {ageRange[1]}</h3>
