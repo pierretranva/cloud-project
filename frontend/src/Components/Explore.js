@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Slider from '@mui/material/Slider';
 import axios from 'axios';
 import "../Stylings/Profile.css";
+import PastJobs from "./PastJobs";
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
@@ -50,46 +51,41 @@ const Explore = () => {
 
     const UserProfile = ({ profile }) => {
         return (
-            <div style={{ marginBottom: '20px', borderBottom: '1px solid gray', paddingBottom: '20px', textAlign: 'center' }}>
-                <div
-                    style={{
-                        width: '100px',
-                        height: '100px',
-                        borderRadius: '50%',
-                        overflow: 'hidden',
-                        display: 'inline-block',
-                        marginBottom: '10px',
-                    }}
-                >
-                    <img
-                        src={profile.image}
-                        alt="Profile"
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
-                </div>
-                <h2>{profile.firstName} {profile.lastName}</h2>
-                <p style={{ margin: '5px' }}>
-                    <strong>Location:</strong> {profile.location}
-                </p>
-                <p style={{ margin: '5px' }}>
-                    <strong>Age:</strong> {profile.age}
-                </p>
-                <p style={{ margin: '5px' }}>
-                    <strong>Height:</strong> {profile.height}
-                </p>
-                <p style={{ margin: '5px' }}>
-                    <strong>Weight:</strong> {profile.weight}
-                </p>
-                <div style={{ marginTop: '10px' }}>
-                {profile.tags.map((tag, index) => (
-                    <span
-                        key={index}
-                        className="profile-tag"
+            <div style={{ display: 'flex', marginBottom: '20px', alignItems: 'center', borderBottom: '1px solid gray' }}>
+                <div style={{ flex: '50%', paddingRight: '20px', textAlign: 'center' }}>
+                    <div
+                        style={{
+                            width: '100px',
+                            height: '100px',
+                            borderRadius: '50%',
+                            overflow: 'hidden',
+                            display: 'inline-block',
+                            marginBottom: '10px',
+                            verticalAlign: 'middle',
+                        }}
                     >
-                        {tag}
-                    </span>
-                ))}
-            </div>
+                        <img
+                            src={profile.image}
+                            alt="Profile"
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                    </div>
+                    <h2>{profile.firstName} {profile.lastName}</h2>
+                    <p style={{ margin: '-2px' }}><strong>Location:</strong> {profile.location}</p>
+                    <p style={{ margin: '5px' }}><strong>Age:</strong> {profile.age}</p>
+                    <p style={{ margin: '5px' }}><strong>Height:</strong> {profile.height}</p>
+                    <p style={{ margin: '5px' }}><strong>Weight:</strong> {profile.weight}</p>
+                    <div style={{ marginTop: '5px', display: 'flex', justifyContent: 'center' }}>
+                        {profile.tags.map((tag, index) => (
+                            <span key={index} className="profile-tag" style={{ margin: '2px' }}>
+                                {tag}
+                            </span>
+                        ))}
+                    </div>
+                </div>
+                <div style={{ flex: '50%', paddingLeft: '20px' }}>
+                    <PastJobs jobs={profile.jobs} />
+                </div>
             </div>
         );
     };
@@ -108,7 +104,7 @@ const Explore = () => {
                                     <Checkbox
                                         checked={isSelected}
                                         onChange={() => handleTagChange(tag)}
-                                        color="primary" // Customize the color as needed
+                                        color="primary" 
                                     />
                                 }
                                 label={tag}
