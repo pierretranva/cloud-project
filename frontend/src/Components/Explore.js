@@ -92,8 +92,8 @@ const Explore = () => {
 
     return (
         <div style={{ border: '1px solid black', padding: '1em', borderRadius: '5px', width: '80%', margin: '1em auto' }}>
-            <div style={{ display: 'flex', flexDirection: 'row', borderRight: '1px solid gray' }}>
-                <div style={{ flex: '30%', padding: '1em', borderRight: '1px solid gray' }}>
+            <div style={{ height: "80vh",display: 'flex', flexDirection: 'row', borderRight: '1px solid gray' }}>
+                <div style={{height: '80vh', flex: '30%', padding: '1em', borderRight: '1px solid gray' }}>
                     <h2>Preferences</h2>
                     <h4>Tags:</h4>
                     <FormGroup>
@@ -122,7 +122,7 @@ const Explore = () => {
                     />
                 </div>
 
-                <div style={{ flex: '70%', padding: '1em', overflowY: 'auto', maxHeight: '400px' }}>
+                <div style={{ flex: '70%', padding: '1em', overflowY: 'auto', maxHeight: '80vh' }}>
                     {filterProfiles().map((profile, index) => (
                         <UserProfile key={index} profile={profile} />
                     ))}
