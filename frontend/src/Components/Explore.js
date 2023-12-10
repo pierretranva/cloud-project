@@ -94,8 +94,8 @@ const Explore = () => {
         <div style={{ border: '1px solid black', padding: '1em', borderRadius: '5px', width: '80%', margin: '1em auto' }}>
             <div style={{ height: "80vh",display: 'flex', flexDirection: 'row', borderRight: '1px solid gray' }}>
                 <div style={{height: '80vh', flex: '30%', padding: '1em', borderRight: '1px solid gray' }}>
-                    <h2>Preferences</h2>
-                    <h4>Tags:</h4>
+                    <h2><strong>Preferences</strong></h2>
+                    <h4 style={{marginTop: '60px'}}>Tags:</h4>
                     <FormGroup>
                         {Object.entries(tags).map(([tag, isSelected]) => (
                             <FormControlLabel
@@ -112,7 +112,7 @@ const Explore = () => {
                             />
                         ))}
                     </FormGroup>
-                    <h4>Age: {ageRange[0]} - {ageRange[1]}</h4>
+                    <h4 style={{marginTop: '60px'}} >Age: {ageRange[0]} - {ageRange[1]}</h4>
                     <Slider
                         value={ageRange}
                         onChange={handleSliderChange}
