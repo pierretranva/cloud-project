@@ -31,6 +31,7 @@ const userSchema = require("./models/user");
 const router = express.Router();
 app.use("/db", router);
 
+//get all job entries
 router.route("/jobs").get((req, res) => {
 	jobSchema.find().then(function (items) {
 		// console.log(items);
@@ -39,6 +40,7 @@ router.route("/jobs").get((req, res) => {
 	});
 });
 
+//update one job entry
 router.route("/jobs/update/:id").post((req, res) => {
 	jobSchema.findById(req.params.id).then((item) => {
 		//need to add in the code here later to update the entry
@@ -54,6 +56,7 @@ router.route("/jobs/update/:id").post((req, res) => {
 	});
 });
 
+//create job entry
 router.route("/jobs/create").post((req, res) => {
 	console.log(req.body);
 	jobSchema.create(req.body).then((item) => {
@@ -65,15 +68,8 @@ router.route("/jobs/create").post((req, res) => {
 	});
 });
 
+//register new user
 router.route("/user/register").post((req, res) => {
-	// console.log(req.body)
-
-	// userSchema.findOneAndUpdate({username: req.body.username},newProfile(req.body.username, bcrypt.hash(req.body.password, 10)), options).then(
-	//     (items) =>{
-	//         console.log(items)
-	//         res.send(items)
-	//     }
-	// )
 	userSchema.find({ username: req.body.username }).then((item) => {
 		if (item.length != 0) {
 			res.status(401).json("Username already used");
@@ -93,24 +89,23 @@ router.route("/user/register").post((req, res) => {
 						bio: "",
 						image: "/firefighter.jpg",
 						tags: [],
-						jobs: [{
-                            title: "Firefighter",
-                            year: "2018 - 2022",
-                            description: "Worked at the Springfield Fire Department",
-                            image: "powerPlant.jpeg",
-                        },
-                        {
-                            title: "Paramedic",
-                            year: "2015 - 2018",
-                            description: "Served as a paramedic in the Springfield region",
-                            image: "firefighter.jpg",
-                        },],
+						jobs: [
+							{
+								title: "Firefighter",
+								year: "2018 - 2022",
+								description: "Worked at the Springfield Fire Department",
+								image: "powerPlant.jpeg",
+							},
+							{
+								title: "Paramedic",
+								year: "2015 - 2018",
+								description: "Served as a paramedic in the Springfield region",
+								image: "firefighter.jpg",
+							},
+						],
 					})
 					.then((item) => {
-
-
 						userSchema.create({ username: req.body.username, password: hash, profile: item._id }).then((thing) => {
-							
 							res.json(thing);
 						});
 					});
@@ -119,6 +114,7 @@ router.route("/user/register").post((req, res) => {
 	});
 });
 
+//user login
 router.route("/user/login").post((req, res) => {
 	userSchema.findOne({ username: req.body.username }).then((items) => {
 		if (items) {
@@ -135,8 +131,8 @@ router.route("/user/login").post((req, res) => {
 	});
 });
 
+//get profile by id
 router.route("/profile/:id").get((req, res) => {
-
 	profileSchema
 		.findById(req.params.id)
 		.then((item) => {
@@ -147,22 +143,23 @@ router.route("/profile/:id").get((req, res) => {
 		});
 });
 
+//update profile by id
 router.route("/profile/update/:id").post((req, res) => {
-	console.log(req.body)
+	console.log(req.body);
 	profileSchema.findById(req.params.id).then(function (item) {
-        
-        item.firstName = req.body.firstName;
-        item.lastName = req.body.lastName;
-        item.location = req.body.location;
-        item.age= req.body.age;
-        item.height = req.body.height;
-        item.weight = req.body.weight;
-        item.bio = req.body.bio;
-        item.tags = req.body.tags;
+		item.firstName = req.body.firstName;
+		item.lastName = req.body.lastName;
+		item.location = req.body.location;
+		item.age = req.body.age;
+		item.height = req.body.height;
+		item.weight = req.body.weight;
+		item.bio = req.body.bio;
+		item.tags = req.body.tags;
 
-		item.save()
+		item
+			.save()
 			.then((items) => {
-                console.log("Items Updated")
+				console.log("Items Updated");
 				res.json("Items updated!");
 			})
 			.catch((err) => {
@@ -170,27 +167,16 @@ router.route("/profile/update/:id").post((req, res) => {
 			});
 	});
 });
-
-router.route("/profile/update/:id").put((req, res) => {
-	const profileId = req.params.id;
-	const updateData = req.body;
-
-	profileSchema
-		.findByIdAndUpdate(profileId, updateData, { new: true })
-		.then((updatedProfile) => {
-			res.json(updatedProfile);
-		})
-		.catch((err) => {
-			res.status(400).send("Update not possible");
-		});
-});
-
+//get all users in db
 router.route("/profiles").get((req, res) => {
-    profileSchema.find().then(function (profiles) {
-        res.json(profiles);
-    }).catch(function (error) {
-        res.status(400).send("Could not retrieve profiles");
-    });
+	profileSchema
+		.find()
+		.then(function (profiles) {
+			res.json(profiles);
+		})
+		.catch(function (error) {
+			res.status(400).send("Could not retrieve profiles");
+		});
 });
 
 // Export the app to be used in bin/www.js

@@ -169,54 +169,63 @@ const UserProfile = (props) => {
 						<p>{profile.bio}</p>
 					)}
 				</div>
-				{!editMode ? <div className="profile-tags">
-					{profile.tags.map((tag, index) => (
-						<span key={index} className="profile-tag">
-							{tag}
-						</span>
-					))}
-				</div>
-				:<Select
-                label="Tags"
-					multiple
-					value={profile.tags}
-					onChange={(e) =>{const {
-                        target: { value },
-                    } = e;
-                    let temp = {...profile}
-                    temp.tags = (typeof value === "string" ? value.split(",") : value);
-                    setProfile(temp)}}
-					input={
-						<InputBase
-							sx={{
-								"& fieldset": { border: "none" },
-								marginLeft: "1rem",
-								backgroundColor: "white",
-								p: "2px 4px",
-								borderRadius: "4px",
-								boxShadow: 1,
-							}}
-						></InputBase>
-					}
-					
-				>
-					{tagValues.map((val) => (
-						<MenuItem key={val} value={val}>
-							{val}
-						</MenuItem>
-					))}
-				</Select>
-}
+				{!editMode ? (
+					<div className="profile-tags">
+						{profile.tags.map((tag, index) => (
+							<span key={index} className="profile-tag">
+								{tag}
+							</span>
+						))}
+					</div>
+				) : (
+					<Select
+						label="Tags"
+						multiple
+						value={profile.tags}
+						onChange={(e) => {
+							const {
+								target: { value },
+							} = e;
+							let temp = { ...profile };
+							temp.tags = typeof value === "string" ? value.split(",") : value;
+							setProfile(temp);
+						}}
+						input={
+							<InputBase
+								sx={{
+									"& fieldset": { border: "none" },
+									marginLeft: "1rem",
+									backgroundColor: "white",
+									p: "2px 4px",
+									borderRadius: "4px",
+									boxShadow: 1,
+								}}
+							></InputBase>
+						}
+					>
+						{tagValues.map((val) => (
+							<MenuItem key={val} value={val}>
+								{val}
+							</MenuItem>
+						))}
+					</Select>
+				)}
 
 				<div className="profile-jobs">
 					<PastJobs jobs={profile.jobs} onAddJob={handleAddJob} />
 				</div>
 				{editMode ? (
-					<button onClick={() => {saveProfile(); setEditMode(!editMode);}}>Save Profile</button>
+					<button
+						onClick={() => {
+							saveProfile();
+							setEditMode(!editMode);
+						}}
+					>
+						Save Profile
+					</button>
 				) : (
 					<button
 						onClick={() => {
-							
 							setEditMode(!editMode);
 						}}
 					>

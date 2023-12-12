@@ -22,7 +22,7 @@ import Divider from "@mui/material/Divider";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import axios from "axios";
 
 const tempJob = {
@@ -57,7 +57,7 @@ const jobTemplate = {
 	coordinates: { latitude: 0, longitude: 0 },
 };
 
-const MapPage = ( props) => {
+const MapPage = (props) => {
 	const mapRef = useRef(null);
 	const [urgency, setUrgency] = useState(["low", "medium", "high"]);
 	const [allJobs, setAllJobs] = useState([]);
@@ -65,18 +65,17 @@ const MapPage = ( props) => {
 	const [searchBox, setSearchBox] = useState("");
 	const [addJobMode, setAddJobMode] = useState(false);
 	const [newJob, setNewJob] = useState(jobTemplate);
-    const [newJobError, setNewJobError] = useState();
 
 	const urgencyValues = ["low", "medium", "high"];
 
-    useEffect(() =>{
-            axios.get("http://localhost:3000/db/jobs").then((res) =>{
-                console.log(res.data)
-                setAllJobs(res.data)
-            })
-            console.log(props.user)
-
-    },[])
+    //loads alls jobs populated in the database on first render
+	useEffect(() => {
+		axios.get("http://localhost:3000/db/jobs").then((res) => {
+			console.log(res.data);
+			setAllJobs(res.data);
+		});
+		console.log(props.user);
+	}, []);
 	function handleChange(e) {
 		const {
 			target: { value },
@@ -90,6 +89,7 @@ const MapPage = ( props) => {
 	function handleSearch() {
 		getGeocode();
 	}
+    //given a string calls api to return coordinates
 	function getGeocode() {
 		fetch("https://geocode.maps.co/search?q={" + searchBox + "}")
 			.then((res) => res.json())
@@ -103,43 +103,38 @@ const MapPage = ( props) => {
 				// mapRef.current.flyTo({center:[json[0].lon,json[0].lat]})
 			});
 	}
+    //When adding new job it reverse geocache location and calls job create endpoint
 	function onSubmit() {
 		if (newJob.coordinates.latitude === 0 && newJob.coordinates.longitude === 0) {
 			console.log("Please input a location");
-		}
-        else{
-		fetch("https://geocode.maps.co/reverse?lat=" + newJob.coordinates.latitude + "&lon=" + newJob.coordinates.longitude)
-			.then((res) => res.json())
-			.then((json) => {
-                if(Object.keys(json.address).includes('city'))
-                {
-                    return json.address.city
-                }
-                else if(Object.keys(json.address).includes('county'))
-                {
-                    return json.address.county
-                }
-                else if(Object.keys(json.address).includes('hamlet')){
-                    return json.address.hamlet
-                }
-                else{
-                    return json.display_name;  
-                }
-			})
-			.then((display_name) => {
-				let temp = { ...newJob };
-				temp.location = display_name;
-				setNewJob(temp);
-				axios.post("http://localhost:3000/db/jobs/create", temp).then((res) => {
-                    console.log(res.data)
-                    setAllJobs(res.data)
+		} else {
+			fetch(
+				"https://geocode.maps.co/reverse?lat=" + newJob.coordinates.latitude + "&lon=" + newJob.coordinates.longitude
+			)
+				.then((res) => res.json())
+				.then((json) => {
+					if (Object.keys(json.address).includes("city")) {
+						return json.address.city;
+					} else if (Object.keys(json.address).includes("county")) {
+						return json.address.county;
+					} else if (Object.keys(json.address).includes("hamlet")) {
+						return json.address.hamlet;
+					} else {
+						return json.display_name;
+					}
+				})
+				.then((display_name) => {
+					let temp = { ...newJob };
+					temp.location = display_name;
+					setNewJob(temp);
+					axios.post("http://localhost:3000/db/jobs/create", temp).then((res) => {
+						console.log(res.data);
+						setAllJobs(res.data);
+					});
+					setAddJobMode(false);
+					setNewJob(jobTemplate);
 				});
-                setAddJobMode(false)
-                setNewJob(jobTemplate)
-			})
-        
-        }
-            
+		}
 	}
 	return (
 		<>
@@ -155,31 +150,21 @@ const MapPage = ( props) => {
 			>
 				<Paper elevation={4} sx={{ width: "60%", marginLeft: "10" }}>
 					<Box sx={{ position: "absolute", zIndex: 1, marginTop: 2, marginLeft: 2, display: "flex", height: "3rem" }}>
-						{/* <TextField
-							id="outlined-uncontrolled"
-							label="Search CrisLine.org"
-							defaultValue="Virginia"
-							InputLabelProps={{
-								style: { fontSize: 13 },
-							}}
-							sx={{ backgroundColor: "white", borderRadius: 4, "& fieldset": { border: "none" } }}
-                            onChange={(e)=>{console.log(e.target.value)}}
-						><IconButton type="button" sx={{ p: '10px' }} aria-label="search">
-                        <SearchIcon />
-                      </IconButton></TextField> */}
-						{props.user && <Tooltip title="Add New Job">
-							<Fab
-								size="medium"
-								aria-label="add"
-								onClick={() => {
-									setAddJobMode(true);
-									setCurrentJob(null);
-								}}
-								sx={{ mr: "1rem", backgroundColor: "red", mt: -0.5 }}
-							>
-								<AddIcon />
-							</Fab>
-						</Tooltip>}
+						{props.user && (
+							<Tooltip title="Add New Job">
+								<Fab
+									size="medium"
+									aria-label="add"
+									onClick={() => {
+										setAddJobMode(true);
+										setCurrentJob(null);
+									}}
+									sx={{ mr: "1rem", backgroundColor: "red", mt: -0.5 }}
+								>
+									<AddIcon />
+								</Fab>
+							</Tooltip>
+						)}
 						<Paper component="form" sx={{ p: "2px 4px", display: "flex", alignItems: "center" }}>
 							<InputBase
 								sx={{ ml: 1, flex: 1 }}
@@ -266,7 +251,7 @@ const MapPage = ( props) => {
 							<Box> You are here</Box>
 						</Popup> */}
 						{allJobs.map((job, index) => {
-                            console.log("hi")
+							console.log("hi");
 							if (urgency.includes(job.dangerLevel.toLocaleLowerCase())) {
 								return (
 									<Marker
@@ -324,7 +309,7 @@ const MapPage = ( props) => {
 								{currentJob.title}
 							</Typography>
 							<Box sx={{ display: "flex", justifyContent: "space-evenly", minWidth: "100%" }}>
-								<Box >
+								<Box>
 									<Typography variant="caption">Location: {currentJob.location}</Typography>
 								</Box>
 								<Box>
@@ -340,7 +325,15 @@ const MapPage = ( props) => {
 									<Typography>JOIN</Typography>
 								</Button>
 							</Box>
-							<Box sx={{ mr:'auto',display: 'flex', flexDirection: 'column',padding: "1rem", alignContent:"flex-start" }}>
+							<Box
+								sx={{
+									mr: "auto",
+									display: "flex",
+									flexDirection: "column",
+									padding: "1rem",
+									alignContent: "flex-start",
+								}}
+							>
 								<Typography
 									variant="body1"
 									sx={{
@@ -403,8 +396,8 @@ const MapPage = ( props) => {
 									color="error"
 									variant="contained"
 									onClick={() => {
-										setAddJobMode(false)
-                                        setNewJob(jobTemplate)
+										setAddJobMode(false);
+										setNewJob(jobTemplate);
 									}}
 								>
 									Cancel
@@ -491,18 +484,24 @@ const MapPage = ( props) => {
 									setNewJob(temp);
 								}}
 							/>
-							<Box sx={{display: 'flex', flexDirection: 'column', alignItems: "center"}}>
-                                <Typography sx={{
-								fontFamily: "monospace",
-								fontWeight: 700,
-								color: "black",
-								textDecoration: "none",
-							}}variant="subtitle2"> Volunteer Roles</Typography>
+							<Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+								<Typography
+									sx={{
+										fontFamily: "monospace",
+										fontWeight: 700,
+										color: "black",
+										textDecoration: "none",
+									}}
+									variant="subtitle2"
+								>
+									{" "}
+									Volunteer Roles
+								</Typography>
 								{newJob.roles.map((item, i) => {
 									return (
-										<Box key={i} sx={{p:1, mt:1}}>
+										<Box key={i} sx={{ p: 1, mt: 1 }}>
 											<TextField
-                                            sx={{maxWidth: "30%", mr: 1 }}
+												sx={{ maxWidth: "30%", mr: 1 }}
 												label="title"
 												value={item.title}
 												onChange={(e) => {
@@ -512,7 +511,7 @@ const MapPage = ( props) => {
 												}}
 											/>
 											<TextField
-                                             sx={{maxWidth: "80%"}}
+												sx={{ maxWidth: "80%" }}
 												label="description"
 												value={item.description}
 												onChange={(e) => {
@@ -521,15 +520,20 @@ const MapPage = ( props) => {
 													setNewJob(temp);
 												}}
 											/>
-                                        <DeleteForeverIcon onClick={() =>{let temp = { ...newJob };
-										temp.roles.splice(i,1);
-										setNewJob(temp);}} sx={{ml: 2,mt: 2}} />
+											<DeleteForeverIcon
+												onClick={() => {
+													let temp = { ...newJob };
+													temp.roles.splice(i, 1);
+													setNewJob(temp);
+												}}
+												sx={{ ml: 2, mt: 2 }}
+											/>
 										</Box>
 									);
 								})}
-                                <Button
-                                sx={{maxWidth: '50%', mb:4,mt:2}}
-                                variant="contained"
+								<Button
+									sx={{ maxWidth: "50%", mb: 4, mt: 2 }}
+									variant="contained"
 									onClick={() => {
 										let temp = { ...newJob };
 										temp.roles.push({ title: "", description: "" });
